@@ -84,7 +84,8 @@
     android:layout_marginTop="@dimen/padding_common"
     android:src="@drawable/ic_likes_24"
     app:layout_constraintEnd_toEndOf="@id/barrier3"
-    app:layout_constraintTop_toTopOf="@id/barrier3" />
+    app:layout_constraintTop_toTopOf="@id/barrier3"
+    android:contentDescription="@string/description_like_button" />
 
     <TextView
         android:id="@+id/likes_count"
