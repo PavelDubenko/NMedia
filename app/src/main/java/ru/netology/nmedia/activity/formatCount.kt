@@ -1,4 +1,4 @@
-package ru.netology.nmedia.dto
+package ru.netology.nmedia.activity
 
 fun formatLikesCount(count: Int): String {
     if (count >= 1000_000) {
