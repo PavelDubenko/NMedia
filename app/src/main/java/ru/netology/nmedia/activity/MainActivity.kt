@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import ru.netology.nmedia.R
+import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -14,25 +16,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val viewModel by viewModels<PostViewModel>()
+        val adapter = PostsAdapter({
+            viewModel.likeById(it.id)
+        }, {
+            viewModel.repostById(it.id)
+        })
 
-       viewModel.data.observe(this) { post ->
-           with(binding) {
-               author.text = post.author
-               published.text = post.published
-               content.text = post.content
-               likesCount.text = formatLikesCount(post.likes)
-               repostsCount.text = formatLikesCount(post.reposts)
-               likes.setImageResource(if (post.likedByMe) R.drawable.ic_liked_24 else R.drawable.ic_likes_24)
+        binding.list.adapter = adapter
 
-           }
-       }
-        binding.likes.setOnClickListener {
-            viewModel.like()
+        viewModel.data.observe(this) { posts ->
+            adapter.submitList(posts)
+
         }
-
-        binding.reposts.setOnClickListener {
-            viewModel.repost()
-        }
-
     }
 }
