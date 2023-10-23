@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 binding.group.visibility = View.VISIBLE
                 binding.edit.text = post.content
                 binding.content.requestFocus()
-            }
+            } else binding.group.visibility = View.GONE
 
         }
 
