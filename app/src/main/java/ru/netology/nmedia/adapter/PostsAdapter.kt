@@ -1,7 +1,9 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,13 +12,21 @@ import ru.netology.nmedia.activity.formatLikesCount
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
 
-typealias LikeListener = (Post) -> Unit
+interface OnInteractoinListener {
+    fun onLike(post: Post)
+    fun onShare(post: Post)
+    fun onRemove(post: Post)
+    fun onEdit(post: Post)
+}
 
-class PostsAdapter(private val likeListener: LikeListener, private val shareListener: LikeListener): ListAdapter<Post, PostViewHolder>(PostDiffCallback) {
+
+class PostsAdapter(
+    private val onInteractoinListener: OnInteractoinListener
+): ListAdapter<Post, PostViewHolder>(PostDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val view = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(view, likeListener, shareListener )
+        return PostViewHolder(view, onInteractoinListener)
     }
 
 
@@ -27,7 +37,10 @@ class PostsAdapter(private val likeListener: LikeListener, private val shareList
     }
 }
 
-class PostViewHolder(private val binding: CardPostBinding, private val likeListener: LikeListener, private val shareListener: LikeListener): RecyclerView.ViewHolder(binding.root) {
+class PostViewHolder(
+    private val binding: CardPostBinding,
+    private val onInteractoinListener: OnInteractoinListener
+    ): RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         with(binding) {
             author.text = post.author
@@ -36,11 +49,30 @@ class PostViewHolder(private val binding: CardPostBinding, private val likeListe
             likesCount.text = formatLikesCount(post.likes)
             repostsCount.text = formatLikesCount(post.reposts)
             likes.setImageResource(if (post.likedByMe) R.drawable.ic_liked_24 else R.drawable.ic_likes_24)
+
             likes.setOnClickListener {
-              likeListener(post)
+              onInteractoinListener.onLike(post)
             }
             reposts.setOnClickListener {
-              shareListener(post)
+              onInteractoinListener.onShare(post)
+            }
+            menu.setOnClickListener {
+                PopupMenu(it.context, it).apply {
+                    inflate(R.menu.options_post)
+                    setOnMenuItemClickListener { menuItem ->
+                            when (menuItem.itemId) {
+                                R.id.remove -> {
+                                    onInteractoinListener.onRemove(post)
+                                    true
+                                }
+                                R.id.edit -> {
+                                    onInteractoinListener.onEdit(post)
+                                    true
+                                }
+                                else -> false
+                            }
+                    }
+                }.show()
             }
         }
     }
