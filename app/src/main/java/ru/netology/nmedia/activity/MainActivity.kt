@@ -75,8 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         binding.cancel.setOnClickListener {
-            val oldText = binding.content.text.toString()
-            viewModel.changeContent(oldText)
+            viewModel.save()
             binding.content.setText("")
             binding.content.clearFocus()
             AndroidUtil.hideKeyboard(it)

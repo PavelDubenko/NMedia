@@ -49,6 +49,9 @@ class PostViewModel: ViewModel() {
             }
         }
     }
+    fun discardChanges(post: Post) {
+
+    }
 
 
 }
