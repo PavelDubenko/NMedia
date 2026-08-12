@@ -9,5 +9,8 @@
     <string name="description_post_save">Save post button</string>
     <string name="error_empty_content">Text cannot be empty</string>
     <string name="menu_edit">Edit</string>
+    <string name="text_sharing_title" translatable="false">Share</string>
+    <string name="text_must_not_be_blank">text must not be blank</string>
+    <string name="ok">OK</string>
 
 </resources>
